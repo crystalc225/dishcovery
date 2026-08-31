@@ -1,0 +1,1794 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Tasteport · eat the world</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Noto+Serif+TC:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ---- editorial food journal: warm paper, ink, tomato-red stamps ---- */
+      :root {
+        --paper: #faf4ea;
+        --ink: #23190f;
+        --dim: #8b7b64;
+        --red: #d6402b;
+        --gold: #bc8420;
+        --green: #47825f;
+        --card: #ffffff;
+        --edge: #eaddc8;
+        --serif: "Noto Serif TC", "Fraunces", Georgia, serif;
+        --display: "Fraunces", "Noto Serif TC", Georgia, serif;
+        --sans: -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html {
+        background: var(--paper);
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--sans);
+        min-height: 100dvh;
+      }
+
+      header {
+        padding: 18px 20px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .brand .seal {
+        width: 36px;
+        height: 36px;
+        border: 2.5px solid var(--red);
+        border-radius: 9px;
+        color: var(--red);
+        font-family: var(--serif);
+        font-weight: 700;
+        font-size: 18px;
+        display: grid;
+        place-items: center;
+        transform: rotate(-5deg);
+        background: var(--card);
+      }
+      header h1 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 21px;
+      }
+      header select {
+        font: inherit;
+        font-size: 14px;
+        color: var(--ink);
+        border: 1.5px solid var(--edge);
+        border-radius: 10px;
+        padding: 6px 10px;
+        background: var(--card);
+      }
+
+      /* ---- tabs ---- */
+      nav {
+        display: flex;
+        gap: 8px;
+        padding: 16px 20px 0;
+        max-width: 640px;
+        margin: 0 auto;
+      }
+      .tab {
+        font: inherit;
+        font-size: 14.5px;
+        font-weight: 600;
+        padding: 9px 20px;
+        border-radius: 999px;
+        border: 1.5px solid var(--edge);
+        background: transparent;
+        color: var(--dim);
+        transition: all 0.18s ease;
+      }
+      .tab.on {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+
+      main {
+        padding: 20px;
+        padding-bottom: 56px;
+        max-width: 640px;
+        margin: 0 auto;
+      }
+      .view {
+        display: none;
+      }
+      .view.on {
+        display: block;
+      }
+
+      /* ---- capture ---- */
+      .capture {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 52px 24px;
+        text-align: center;
+      }
+      .capture .dots {
+        color: var(--red);
+        letter-spacing: 0.4em;
+        font-size: 14px;
+      }
+      .capture h2 {
+        font-family: var(--display);
+        font-weight: 500;
+        font-size: 30px;
+        line-height: 1.25;
+        max-width: 16ch;
+      }
+      .capture h2 em {
+        font-style: italic;
+        color: var(--red);
+      }
+      .capture p {
+        color: var(--dim);
+        font-size: 15px;
+        max-width: 32ch;
+        line-height: 1.55;
+      }
+      .btn {
+        font: inherit;
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        background: var(--red);
+        border: 0;
+        border-radius: 999px;
+        padding: 15px 30px;
+        box-shadow: 0 8px 24px rgba(214, 64, 43, 0.28);
+        transition: transform 0.12s ease;
+      }
+      .btn:active {
+        transform: scale(0.96);
+      }
+      .btn.ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1.5px solid var(--edge);
+        box-shadow: none;
+        font-weight: 600;
+      }
+      #file {
+        display: none;
+      }
+
+      /* ---- loading ---- */
+      .loading {
+        display: none;
+        padding: 36px 0;
+      }
+      .loading.on {
+        display: block;
+      }
+      .skeleton {
+        height: 96px;
+        border-radius: 18px;
+        margin-bottom: 12px;
+        background: linear-gradient(
+          100deg,
+          #f1e8d8 40%,
+          #fbf6ed 50%,
+          #f1e8d8 60%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.3s infinite linear;
+      }
+      @keyframes shimmer {
+        to {
+          background-position: -200% 0;
+        }
+      }
+      .loading .hint {
+        text-align: center;
+        color: var(--dim);
+        font-size: 14px;
+      }
+
+      /* ---- cards ---- */
+      .lang-tag {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--dim);
+        margin-bottom: 16px;
+      }
+      .lang-tag .pill {
+        color: var(--red);
+        border: 1.5px solid var(--red);
+        border-radius: 999px;
+        padding: 2px 11px;
+        font-weight: 600;
+      }
+
+      .card {
+        position: relative;
+        border: 1.5px solid var(--edge);
+        border-radius: 18px;
+        background: var(--card);
+        padding: 18px 20px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(35, 25, 15, 0.04);
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.5s cubic-bezier(0.2, 0.7, 0.3, 1),
+          transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1),
+          border-color 0.15s;
+      }
+      .card.in {
+        opacity: 1;
+        transform: none;
+      }
+      .card:active {
+        border-color: var(--red);
+      }
+      .idx {
+        color: var(--red);
+        font-size: 13px;
+        font-weight: 800;
+        vertical-align: 2px;
+        margin-right: 2px;
+      }
+      .card .tname {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 19px;
+        line-height: 1.3;
+        padding-right: 74px;
+      }
+      .card .orig {
+        font-family: var(--serif);
+        font-size: 15px;
+        color: var(--dim);
+        margin-top: 3px;
+      }
+      .card .lit {
+        font-size: 13px;
+        color: var(--red);
+        font-style: italic;
+        margin-top: 4px;
+      }
+      .card .what {
+        font-size: 14px;
+        color: var(--dim);
+        margin-top: 8px;
+        line-height: 1.5;
+      }
+      .stamp {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 10.5px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--red);
+        border: 2px solid var(--red);
+        border-radius: 7px;
+        padding: 3px 9px;
+        transform: rotate(4deg);
+        background: rgba(214, 64, 43, 0.05);
+      }
+      .stamp.unsure {
+        color: var(--gold);
+        border-color: var(--gold);
+        background: rgba(188, 132, 32, 0.06);
+      }
+
+      .error {
+        display: none;
+        background: #fbeae6;
+        border: 1.5px solid #efc4bb;
+        color: #a5301d;
+        border-radius: 14px;
+        padding: 13px 15px;
+        font-size: 14px;
+        margin-bottom: 16px;
+      }
+      .error.on {
+        display: block;
+      }
+      .again {
+        display: none;
+        width: 100%;
+        margin-top: 16px;
+      }
+      .again.on {
+        display: block;
+      }
+
+      /* ---- bottom sheet ---- */
+      .scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(35, 25, 15, 0.45);
+        backdrop-filter: blur(3px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s;
+        z-index: 40;
+      }
+      .sheet {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--paper);
+        z-index: 50;
+        border-radius: 24px 24px 0 0;
+        padding: 10px 20px calc(28px + env(safe-area-inset-bottom));
+        transform: translateY(105%);
+        transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.25, 1);
+        max-height: 90dvh;
+        overflow-y: auto;
+      }
+      .open .scrim {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .open .sheet {
+        transform: none;
+      }
+      .grabber {
+        width: 42px;
+        height: 4.5px;
+        border-radius: 3px;
+        background: var(--edge);
+        margin: 6px auto 16px;
+      }
+
+      /* photo carousel */
+      .carousel {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        margin: 0 -20px 16px;
+        padding: 0 20px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .carousel::-webkit-scrollbar {
+        display: none;
+      }
+      .shot {
+        flex: 0 0 82%;
+        aspect-ratio: 4 / 3;
+        scroll-snap-align: center;
+        border-radius: 18px;
+        overflow: hidden;
+        position: relative;
+        background: linear-gradient(135deg, #f0e6d4, #e7dbc5);
+      }
+      .shot img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .shot .fallback {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-size: 56px;
+      }
+      .shot .credit {
+        position: absolute;
+        bottom: 8px;
+        right: 10px;
+        font-size: 10px;
+        color: #fff;
+        background: rgba(35, 25, 15, 0.55);
+        border-radius: 6px;
+        padding: 2px 7px;
+      }
+
+      .sheet h2 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 25px;
+        line-height: 1.2;
+      }
+      .sheet .orig-sub {
+        font-family: var(--serif);
+        font-size: 17px;
+        color: var(--dim);
+        margin-top: 3px;
+      }
+      .sheet .sub {
+        color: var(--dim);
+        font-size: 14.5px;
+        margin: 10px 0 16px;
+        line-height: 1.55;
+      }
+
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .fact {
+        border: 1.5px solid var(--edge);
+        background: var(--card);
+        border-radius: 14px;
+        padding: 11px 13px;
+      }
+      .fact .k {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.11em;
+        color: var(--dim);
+      }
+      .fact .v {
+        font-size: 14.5px;
+        margin-top: 4px;
+        font-weight: 500;
+      }
+      .chili {
+        display: inline-block;
+        opacity: 0;
+        transform: scale(0);
+        animation: pop 0.25s cubic-bezier(0.3, 1.6, 0.5, 1) forwards;
+      }
+      .chili:nth-child(1) {
+        animation-delay: 0.15s;
+      }
+      .chili:nth-child(2) {
+        animation-delay: 0.27s;
+      }
+      .chili:nth-child(3) {
+        animation-delay: 0.39s;
+      }
+      @keyframes pop {
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin: 4px 0 14px;
+      }
+      .chip {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink);
+        background: var(--card);
+        border: 1.5px solid var(--edge);
+        border-radius: 999px;
+        padding: 5px 12px;
+      }
+      .krow {
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--dim);
+        margin: 14px 0 7px;
+      }
+
+      .meta2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 6px;
+      }
+      .warnbar {
+        font-size: 13px;
+        color: #a5301d;
+        background: #fbeae6;
+        border-radius: 12px;
+        padding: 9px 13px;
+        margin: 4px 0 12px;
+      }
+
+      .sheet p.body {
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 10px 0;
+      }
+      .sheet p.body b {
+        color: var(--red);
+        font-weight: 700;
+      }
+
+      .heritage {
+        margin: 18px 0 6px;
+        padding: 18px 20px;
+        border-radius: 18px;
+        background: var(--card);
+        border: 1.5px solid var(--edge);
+        border-left: 4px solid var(--red);
+        box-shadow: 0 2px 10px rgba(35, 25, 15, 0.04);
+      }
+      .heritage .k {
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--red);
+        margin-bottom: 8px;
+        font-weight: 800;
+      }
+      .heritage p {
+        font-family: var(--serif);
+        font-size: 15px;
+        line-height: 1.75;
+      }
+
+      .origin {
+        margin-top: 18px;
+      }
+      .origin .region {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+      .origin iframe {
+        width: 100%;
+        height: 190px;
+        border: 1.5px solid var(--edge);
+        border-radius: 16px;
+      }
+      .explore-btn {
+        width: 100%;
+        margin-top: 12px;
+      }
+
+      .region-panel {
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition:
+          max-height 0.6s ease,
+          opacity 0.5s ease 0.1s;
+      }
+      .region-panel.open {
+        max-height: 2000px;
+        opacity: 1;
+      }
+      .region-panel .inner {
+        padding-top: 16px;
+      }
+      .region-panel h3 {
+        font-family: var(--display);
+        font-size: 19px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .region-panel p {
+        font-size: 14px;
+        line-height: 1.65;
+        color: var(--ink);
+        margin-bottom: 12px;
+      }
+
+      /* ---- explore tab ---- */
+      .explore-head {
+        text-align: center;
+        padding: 26px 10px 8px;
+      }
+      .explore-head h2 {
+        font-family: var(--display);
+        font-weight: 500;
+        font-size: 27px;
+        line-height: 1.25;
+      }
+      .explore-head h2 em {
+        font-style: italic;
+        color: var(--red);
+      }
+      .explore-head p {
+        color: var(--dim);
+        font-size: 14.5px;
+        margin-top: 8px;
+      }
+      .cityrow {
+        display: flex;
+        gap: 8px;
+        margin: 18px 0 8px;
+      }
+      .cityrow input {
+        flex: 1;
+        font: inherit;
+        font-size: 16px;
+        padding: 13px 16px;
+        border: 1.5px solid var(--edge);
+        border-radius: 14px;
+        background: var(--card);
+        color: var(--ink);
+      }
+      .cityrow input:focus {
+        outline: none;
+        border-color: var(--red);
+      }
+      .locbtn {
+        font-size: 13px;
+        color: var(--dim);
+        background: none;
+        border: none;
+        padding: 8px;
+        font-weight: 600;
+      }
+      .guide-card {
+        border: 1.5px solid var(--edge);
+        background: var(--card);
+        border-radius: 18px;
+        padding: 17px 19px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 10px rgba(35, 25, 15, 0.04);
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.5s cubic-bezier(0.2, 0.7, 0.3, 1),
+          transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+      }
+      .guide-card.in {
+        opacity: 1;
+        transform: none;
+      }
+      .guide-card.tap {
+        cursor: pointer;
+      }
+      .guide-card.tap:active {
+        border-color: var(--red);
+      }
+      .guide-card .gk {
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.13em;
+        color: var(--red);
+        font-weight: 800;
+        margin-bottom: 7px;
+      }
+      .guide-card p {
+        font-size: 14px;
+        line-height: 1.65;
+      }
+      .gdish .en {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .gdish .og {
+        font-family: var(--serif);
+        color: var(--dim);
+        font-size: 14.5px;
+        margin-top: 2px;
+      }
+      .gdish .why {
+        font-size: 14px;
+        margin-top: 8px;
+        line-height: 1.5;
+      }
+      .gdish .meta {
+        font-size: 13px;
+        color: var(--dim);
+        margin-top: 8px;
+        line-height: 1.55;
+      }
+      .gdish .meta b {
+        color: var(--gold);
+        font-weight: 700;
+      }
+
+      /* sheet section stagger */
+      .sec {
+        opacity: 0;
+        transform: translateY(12px);
+        animation: secin 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+        animation-delay: calc(var(--d, 0) * 90ms);
+      }
+      @keyframes secin {
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* photo fade-in + carousel dots */
+      .shot img {
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      .shot img.ld {
+        opacity: 1;
+      }
+      .dots-row {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin: -6px 0 14px;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--edge);
+        transition: all 0.25s ease;
+      }
+      .dot.on {
+        background: var(--red);
+        width: 18px;
+        border-radius: 3px;
+      }
+
+      /* chips feel tappable */
+      .chip.tapc {
+        cursor: pointer;
+        transition:
+          transform 0.12s ease,
+          border-color 0.12s ease;
+      }
+      .chip.tapc:active {
+        transform: scale(0.92);
+        border-color: var(--red);
+      }
+
+      .mapslink {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        margin: 6px 0 2px;
+        padding: 12px;
+      }
+      .morebtn {
+        font: inherit;
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--red);
+        background: none;
+        border: none;
+        padding: 8px 0 0;
+      }
+
+      /* mini ingredient overlay (sits above the sheet) */
+      .ing-scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(35, 25, 15, 0.5);
+        z-index: 90;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      .ing-card {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        z-index: 95;
+        width: min(88vw, 380px);
+        background: var(--paper);
+        border-radius: 20px;
+        padding: 0 0 20px;
+        overflow: hidden;
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          transform 0.3s cubic-bezier(0.3, 1.4, 0.5, 1),
+          opacity 0.2s;
+        box-shadow: 0 24px 60px rgba(35, 25, 15, 0.3);
+      }
+      .ing-open .ing-scrim {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .ing-open .ing-card {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .ing-card .ing-img {
+        height: 150px;
+        background: linear-gradient(135deg, #f0e6d4, #e7dbc5);
+        display: grid;
+        place-items: center;
+        font-size: 44px;
+      }
+      .ing-card .ing-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .ing-card .pad {
+        padding: 16px 18px 0;
+      }
+      .ing-card h4 {
+        font-family: var(--display);
+        font-size: 19px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .ing-card p {
+        font-size: 13.5px;
+        line-height: 1.6;
+        margin-bottom: 8px;
+      }
+      .ing-card .tl {
+        color: var(--gold);
+        font-weight: 600;
+      }
+
+      /* pinned menu photo */
+      .menu-photo {
+        position: relative;
+        height: 120px;
+        border-radius: 18px;
+        overflow: hidden;
+        margin-bottom: 16px;
+        cursor: pointer;
+        border: 1.5px solid var(--edge);
+      }
+      .menu-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .menu-photo .mp-label {
+        position: absolute;
+        inset: auto 0 0 0;
+        padding: 22px 14px 9px;
+        background: linear-gradient(transparent, rgba(35, 25, 15, 0.72));
+        color: #fff;
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+      .zoom-scrim {
+        position: fixed;
+        inset: 0;
+        z-index: 120;
+        background: rgba(20, 14, 8, 0.93);
+        display: none;
+        place-items: center;
+        padding: 16px;
+      }
+      .zoom-scrim.on {
+        display: grid;
+      }
+      .zoom-scrim img {
+        max-width: 100%;
+        max-height: 92dvh;
+        border-radius: 12px;
+      }
+
+      /* card side thumbnail */
+      .card {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+      .card .cbody {
+        flex: 1;
+        min-width: 0;
+      }
+      .card .cthumb {
+        flex: 0 0 66px;
+        width: 66px;
+        height: 66px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f0e6d4, #e7dbc5);
+        display: grid;
+        place-items: center;
+        font-size: 26px;
+        margin-top: 26px;
+      }
+      .card .cthumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+      .card .cthumb img.ld {
+        opacity: 1;
+      }
+
+      /* city hero + map */
+      .city-hero {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.5s cubic-bezier(0.2, 0.7, 0.3, 1),
+          transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+      }
+      .city-hero.in {
+        opacity: 1;
+        transform: none;
+      }
+      .city-hero {
+        position: relative;
+        height: 190px;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #e8dcc6, #d9c9ac);
+      }
+      .city-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.6s;
+      }
+      .city-hero img.ld {
+        opacity: 1;
+      }
+      .city-hero .ch-name {
+        position: absolute;
+        inset: auto 0 0 0;
+        padding: 40px 18px 14px;
+        background: linear-gradient(transparent, rgba(35, 25, 15, 0.72));
+        color: #fff;
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 26px;
+      }
+      .city-map iframe {
+        width: 100%;
+        height: 150px;
+        border: 1.5px solid var(--edge);
+        border-radius: 16px;
+      }
+
+      /* guide dish rows with thumbs */
+      .gdish {
+        display: flex;
+        gap: 14px;
+      }
+      .gdish .gbody {
+        flex: 1;
+        min-width: 0;
+      }
+      .gdish .cthumb {
+        flex: 0 0 72px;
+        width: 72px;
+        height: 72px;
+        border-radius: 14px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f0e6d4, #e7dbc5);
+        display: grid;
+        place-items: center;
+        font-size: 28px;
+      }
+      .gdish .cthumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+      .gdish .cthumb img.ld {
+        opacity: 1;
+      }
+      .price-pill {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--green);
+        border: 1.5px solid var(--green);
+        border-radius: 999px;
+        padding: 2px 10px;
+        margin-top: 8px;
+      }
+      .spots {
+        font-size: 13px;
+        margin-top: 8px;
+        line-height: 1.55;
+      }
+      .spots b {
+        color: var(--red);
+        font-weight: 700;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .sec {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
+        .card,
+        .guide-card {
+          transition: none;
+          opacity: 1;
+          transform: none;
+        }
+        .chili {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
+        .sheet,
+        .region-panel {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <div class="seal">食</div>
+        <h1>Tasteport</h1>
+      </div>
+      <select id="lang">
+        <option>English</option>
+        <option>繁體中文</option>
+        <option>日本語</option>
+      </select>
+    </header>
+
+    <nav>
+      <button class="tab on" id="tabScan" onclick="switchTab('scan')">
+        Scan a menu
+      </button>
+      <button class="tab" id="tabExplore" onclick="switchTab('explore')">
+        Explore a city
+      </button>
+    </nav>
+
+    <main>
+      <!-- ============ SCAN VIEW ============ -->
+      <div class="view on" id="viewScan">
+        <div class="error" id="error"></div>
+        <div class="capture" id="capture">
+          <div class="dots">· · ·</div>
+          <h2>Every menu, <em>decoded.</em></h2>
+          <p>
+            Point your camera at a menu in any language. Tap a dish to see what
+            it really is.
+          </p>
+          <button class="btn" onclick="fileCam.click()">📷 Take a photo</button>
+          <button class="btn ghost" onclick="fileLib.click()">
+            Upload from library
+          </button>
+          <input
+            type="file"
+            id="fileCam"
+            accept="image/*"
+            capture="environment"
+            style="display: none"
+          />
+          <input
+            type="file"
+            id="fileLib"
+            accept="image/*"
+            style="display: none"
+          />
+        </div>
+        <div class="loading" id="loading">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="hint">Reading the menu…</div>
+        </div>
+        <div class="lang-tag" id="langTag">
+          Menu language <span class="pill" id="langName"></span>
+        </div>
+        <div id="cards"></div>
+        <button class="btn ghost again" id="again" onclick="reset()">
+          Scan another menu
+        </button>
+      </div>
+
+      <!-- ============ EXPLORE VIEW ============ -->
+      <div class="view" id="viewExplore">
+        <div class="error" id="errorX"></div>
+        <div class="explore-head">
+          <h2>Where are you <em>eating?</em></h2>
+          <p>
+            Enter a city to see its must-try dishes, local customs, and how to
+            eat like a local.
+          </p>
+        </div>
+        <div class="cityrow">
+          <input
+            id="cityInput"
+            placeholder="e.g. Tainan, Osaka, Bangkok…"
+            enterkeyhint="search"
+          />
+          <button class="btn" style="padding: 13px 20px" onclick="loadCity()">
+            Go
+          </button>
+        </div>
+        <div style="text-align: center">
+          <button class="locbtn" onclick="useLocation()">
+            📍 Use my location
+          </button>
+        </div>
+        <div class="loading" id="loadingX">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="hint">Asking the locals…</div>
+        </div>
+        <div id="guide"></div>
+      </div>
+    </main>
+
+    <div id="overlay">
+      <div class="scrim" onclick="closeSheet()"></div>
+      <div class="sheet" id="sheet"></div>
+    </div>
+
+    <div class="zoom-scrim" id="zoom" onclick="closeZoom()">
+      <img id="zoomImg" src="" alt="menu" />
+    </div>
+
+    <div class="ing-scrim" onclick="closeIngredient()"></div>
+    <div class="ing-card" id="ingBody"></div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      let menuLang = "unknown";
+      const EMOJI = {
+        main: "🍜",
+        side: "🥟",
+        soup: "🍲",
+        cold_dish: "🥗",
+        dessert: "🍡",
+        drink: "🍵",
+        other: "🥢",
+      };
+
+      /* lazy dish thumbnails: Commons search fired only when a card scrolls into view */
+      const thumbCache = new Map();
+      const FOODY =
+        /(food|dish|cuisine|appetizer|antipasto|dessert|soup|bread|pasta|noodle|rice|meat|seafood|fish|shellfish|drink|beverage|cake|snack|sauce|stew|salad|cheese|sausage|pastry|dumpling|sandwich|pizza|specialt|delicac|street food|fried|grilled|roasted|braised|curr(y|ies)|tofu|pork|beef|chicken|dessert|confection)/i;
+
+      /* find the dish's Wikipedia ARTICLE (not a raw file), verify its description
+   sounds like food, then use its curated lead image. Faces can't pass this. */
+      async function findFoodArticle(name) {
+        for (const q of [name, name + " dish", name + " food"]) {
+          try {
+            const r = await fetch(
+              `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=5&prop=pageimages|description&piprop=thumbnail&pithumbsize=340&format=json&origin=*`,
+            );
+            const j = await r.json();
+            const pages = Object.values(j.query?.pages || {}).sort(
+              (a, b) => a.index - b.index,
+            );
+            const hit = pages.find(
+              (p) =>
+                FOODY.test((p.description || "") + " " + p.title) &&
+                p.thumbnail?.source,
+            );
+            if (hit) return hit;
+          } catch (_) {}
+        }
+        return null;
+      }
+
+      async function fetchThumb(name) {
+        if (thumbCache.has(name)) return thumbCache.get(name);
+        const hit = await findFoodArticle(name);
+        const url = hit ? hit.thumbnail.source : null;
+        thumbCache.set(name, url);
+        return url;
+      }
+      const thumbIO = new IntersectionObserver(
+        (es) =>
+          es.forEach(async (e) => {
+            if (!e.isIntersecting) return;
+            thumbIO.unobserve(e.target);
+            const url = await fetchThumb(e.target.dataset.tq);
+            if (url)
+              e.target.innerHTML = `<img src="${url}" alt="" onload="this.classList.add('ld')">`;
+          }),
+        { rootMargin: "120px" },
+      );
+
+      let lastPhotoURL = null;
+      function openZoom() {
+        if (!lastPhotoURL) return;
+        $("zoomImg").src = lastPhotoURL;
+        $("zoom").classList.add("on");
+      }
+      function closeZoom() {
+        $("zoom").classList.remove("on");
+      }
+
+      /* scroll-reveal: cards animate in as they enter the viewport */
+      const io = new IntersectionObserver(
+        (es) =>
+          es.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          }),
+        { threshold: 0.08 },
+      );
+      function reveal(el, i) {
+        el.style.transitionDelay = `${Math.min(i * 60, 360)}ms`;
+        io.observe(el);
+      }
+
+      function switchTab(t) {
+        $("tabScan").classList.toggle("on", t === "scan");
+        $("tabExplore").classList.toggle("on", t === "explore");
+        $("viewScan").classList.toggle("on", t === "scan");
+        $("viewExplore").classList.toggle("on", t === "explore");
+      }
+
+      /* ============ SCAN ============ */
+      async function handleFile(e) {
+        const f = e.target.files[0];
+        if (!f) return;
+        if (lastPhotoURL) URL.revokeObjectURL(lastPhotoURL);
+        lastPhotoURL = URL.createObjectURL(f);
+        show("loading");
+        hideError();
+        const form = new FormData();
+        form.append("image", f);
+        form.append("target_lang", $("lang").value);
+        try {
+          const r = await fetch("/api/menu", { method: "POST", body: form });
+          if (!r.ok) throw new Error((await r.json()).detail || r.status);
+          render(await r.json());
+        } catch (err) {
+          showError("Couldn't read that menu: " + err.message);
+          show("capture");
+        }
+        e.target.value = "";
+      }
+      $("fileCam").addEventListener("change", handleFile);
+      $("fileLib").addEventListener("change", handleFile);
+
+      function render(data) {
+        menuLang = data.detected_language;
+        $("langName").textContent = menuLang;
+        $("langTag").style.display = "flex";
+        $("cards").innerHTML = lastPhotoURL
+          ? `<div class="menu-photo" onclick="openZoom()"><img src="${lastPhotoURL}" alt="your menu">
+        <span class="mp-label">Your menu · tap to zoom · dishes below follow menu order</span></div>`
+          : "";
+        data.dishes.forEach((d, i) => {
+          const el = document.createElement("div");
+          el.className = "card";
+          const emoji = EMOJI[d.category] || "🥢";
+          el.innerHTML = `
+      ${d.confidence === "unsure" ? "" : `<span class="stamp">${esc(d.category.replace("_", " "))}</span>`}
+      <div class="cbody">
+        <div class="tname"><span class="idx">№${i + 1}</span> ${esc(d.translated_name)}</div>
+        <div class="orig">${esc(d.original)}</div>
+        ${d.literal ? `<div class="lit">lit. “${esc(d.literal)}”</div>` : ""}
+        <div class="what">${esc(d.what_it_is)}</div>
+      </div>
+      <div class="cthumb" data-tq="${esc(d.translated_name.split("(")[0].trim())}">${emoji}</div>`;
+          el.onclick = () => openSheet(d);
+          $("cards").appendChild(el);
+          reveal(el, i);
+          thumbIO.observe(el.querySelector(".cthumb"));
+        });
+        show("cards");
+        $("again").classList.add("on");
+      }
+
+      /* ============ DETAIL SHEET ============ */
+      async function openSheet(dish) {
+        $("sheet").innerHTML = `<div class="grabber"></div>
+    <h2>${esc(dish.translated_name || dish.original)}</h2>
+    <div class="orig-sub">${esc(dish.original)}</div>
+    <div class="sub">${esc(dish.what_it_is)}</div>
+    <div class="skeleton" style="height:180px"></div>`;
+        document.body.classList.add("open");
+        try {
+          const r = await fetch("/api/dish", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: dish.original,
+              language: menuLang,
+              target_lang: $("lang").value,
+            }),
+          });
+          if (!r.ok) throw new Error((await r.json()).detail || r.status);
+          renderDetail(dish, await r.json());
+        } catch (err) {
+          $("sheet").innerHTML =
+            `<div class="grabber"></div><h2>${esc(dish.original)}</h2>
+      <p class="body" style="color:#A5301D;margin-top:10px">Couldn't load details: ${esc(err.message)}</p>`;
+        }
+      }
+
+      async function renderDetail(dish, t) {
+        const chilis =
+          t.spice > 0
+            ? Array.from(
+                { length: t.spice },
+                () => `<span class="chili">🌶</span>`,
+              ).join("")
+            : "not spicy";
+        const emoji = EMOJI[dish.category] || "🥢";
+        const lat = t.origin_lat,
+          lng = t.origin_lng;
+        const bbox = `${lng - 4}%2C${lat - 2.5}%2C${lng + 4}%2C${lat + 2.5}`;
+
+        $("sheet").innerHTML = `<div class="grabber"></div>
+    <div class="carousel sec" style="--d:0" id="carousel">
+      <div class="shot"><span class="fallback">${emoji}</span></div>
+    </div>
+    <div class="dots-row" id="dots"></div>
+    <div class="sec" style="--d:1">
+      <h2>${esc(t.english_name || dish.translated_name)}</h2>
+      <div class="orig-sub">${esc(dish.original)}</div>
+      <div class="sub">${esc(dish.what_it_is)}</div>
+    </div>
+    ${t.confidence === "unsure" ? `<div class="warnbar sec" style="--d:1">⚠ Not fully sure about this dish — treat details as a best guess.</div>` : ""}
+    <div class="facts sec" style="--d:2">
+      <div class="fact"><div class="k">Spice</div><div class="v">${chilis}</div></div>
+      <div class="fact"><div class="k">Served</div><div class="v">${esc(t.temperature)}</div></div>
+      <div class="fact"><div class="k">Texture</div><div class="v">${esc(t.texture)}</div></div>
+    </div>
+    ${t.contains_offal ? `<div class="warnbar sec" style="--d:2">🫀 Contains organ meats (offal).</div>` : ""}
+    <div class="sec" style="--d:3">
+      <div class="krow">Key ingredients · tap one</div>
+      <div class="chips">${t.key_ingredients.map((x) => `<span class="chip tapc" data-ing="${esc(x)}">${esc(x)}</span>`).join("")}</div>
+      <div class="meta2">
+        <div class="fact"><div class="k">When it's eaten</div><div class="v">${esc(t.eaten_when)}</div></div>
+        <div class="fact"><div class="k">Season</div><div class="v">${esc(t.seasonal)}</div></div>
+      </div>
+      ${t.common_allergens.length ? `<p class="body"><b>Allergens</b> · ${esc(t.common_allergens.join(", "))}</p>` : ""}
+      <p class="body"><b>How to eat</b> · ${esc(t.how_to_eat)}</p>
+      <a class="btn ghost mapslink" target="_blank" rel="noopener"
+         href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((t.english_name || dish.translated_name) + (dish.city ? " " + dish.city : " restaurant"))}">
+         📍 See places &amp; reviews on Google Maps</a>
+    </div>
+    <div class="heritage sec" style="--d:4">
+      <div class="k">The story</div><p id="storyText">${esc(t.heritage)}</p>
+      <button class="morebtn" id="moreBtn">Tell me more →</button>
+    </div>
+    <div class="origin sec" style="--d:5">
+      <div class="krow">Where it comes from</div>
+      <div class="region">${esc(t.origin_region)}</div>
+      <iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}"></iframe>
+      <button class="btn ghost explore-btn" id="exploreBtn">Explore ${esc(t.origin_region.split(",")[0])} →</button>
+      <div class="region-panel" id="regionPanel"><div class="inner" id="regionInner"></div></div>
+    </div>`;
+
+        $("moreBtn").onclick = () =>
+          loadStory(dish.original, t.canonical_name || t.english_name);
+        wireIngredientChips($("sheet"));
+        loadPhotos(t, emoji);
+        $("exploreBtn").onclick = () => loadRegion(t.origin_region);
+      }
+
+      /* carousel: locate the dish's Wikipedia article (food-verified), then pull the
+   images used ON that article - curated, all genuinely of the dish. */
+      async function loadPhotos(t, emoji) {
+        const name = t.canonical_name || t.english_name;
+        let shots = [];
+        try {
+          // article search that also returns the pageid + lead image
+          let art = null;
+          for (const q of [name, name + " dish"]) {
+            const r = await fetch(
+              `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=5&prop=pageimages|description&piprop=thumbnail&pithumbsize=900&format=json&origin=*`,
+            );
+            const j = await r.json();
+            const pages = Object.values(j.query?.pages || {}).sort(
+              (a, b) => a.index - b.index,
+            );
+            art = pages.find((p) =>
+              FOODY.test((p.description || "") + " " + p.title),
+            );
+            if (art) break;
+          }
+          if (art) {
+            if (art.thumbnail?.source)
+              shots.push({ url: art.thumbnail.source, label: art.title });
+            // list image files used on the article, filter junk, resolve to urls
+            const r2 = await fetch(
+              `https://en.wikipedia.org/w/api.php?action=query&pageids=${art.pageid}&prop=images&imlimit=25&format=json&origin=*`,
+            );
+            const j2 = await r2.json();
+            const files = (
+              Object.values(j2.query?.pages || {})[0]?.images || []
+            )
+              .map((f) => f.title)
+              .filter(
+                (tt) =>
+                  /\.(jpe?g|png)$/i.test(tt) &&
+                  !/(flag|map|logo|icon|coat|seal|montage|locator|banner|symbol)/i.test(
+                    tt,
+                  ),
+              )
+              .slice(0, 8);
+            if (files.length) {
+              const r3 = await fetch(
+                `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(files.join("|"))}&prop=imageinfo&iiprop=url&iiurlwidth=900&format=json&origin=*`,
+              );
+              const j3 = await r3.json();
+              Object.values(j3.query?.pages || {}).forEach((p) => {
+                const u = p.imageinfo?.[0]?.thumburl;
+                if (u && !shots.some((sh) => sh.url === u))
+                  shots.push({ url: u, label: art.title });
+              });
+            }
+          }
+        } catch (_) {}
+        shots = shots.slice(0, 6);
+        if (!shots.length) return; // keep emoji fallback - better nothing than wrong
+        const car = $("carousel");
+        car.innerHTML = shots
+          .map(
+            (sh) =>
+              `<div class="shot"><img src="${sh.url}" alt="${esc(sh.label)}" loading="lazy" onload="this.classList.add('ld')">
+      <span class="credit">${esc(sh.label)} · Wikipedia</span></div>`,
+          )
+          .join("");
+        const dots = $("dots");
+        dots.innerHTML = shots
+          .map((_, i) => `<span class="dot ${i === 0 ? "on" : ""}"></span>`)
+          .join("");
+        car.onscroll = () => {
+          const i = Math.round(
+            car.scrollLeft / (car.firstElementChild.offsetWidth + 10),
+          );
+          [...dots.children].forEach((d, k) =>
+            d.classList.toggle("on", k === i),
+          );
+        };
+      }
+
+      /* heritage deep-dive */
+      async function loadStory(name, canonical) {
+        const btn = $("moreBtn");
+        btn.disabled = true;
+        btn.textContent = "Loading…";
+        try {
+          const r = await fetch("/api/story", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              canonical,
+              target_lang: $("lang").value,
+            }),
+          });
+          if (!r.ok) throw new Error((await r.json()).detail || r.status);
+          const j = await r.json();
+          $("storyText").innerHTML = j.story
+            .split("\n\n")
+            .map((p) => esc(p))
+            .join("<br><br>");
+          btn.remove();
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = "Tell me more →";
+        }
+      }
+
+      /* ingredient mini-card */
+      function wireIngredientChips(root) {
+        root.querySelectorAll(".chip.tapc[data-ing]").forEach((ch) => {
+          ch.onclick = (ev) => {
+            ev.stopPropagation();
+            openIngredient(ch.dataset.ing);
+          };
+        });
+      }
+
+      async function openIngredient(name) {
+        $("ingBody").innerHTML = `<div class="ing-img">🌿</div>
+    <div class="pad"><h4>${esc(name)}</h4><p style="color:var(--dim)">Loading…</p></div>`;
+        document.body.classList.add("ing-open");
+        // image + text in parallel
+        const imgP = (async () => {
+          try {
+            const w = await fetch(
+              `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(name)}&gsrlimit=4&prop=imageinfo&iiprop=url&iiurlwidth=600&format=json&origin=*`,
+            );
+            const j = await w.json();
+            const hit = Object.values(j.query?.pages || {})
+              .sort((a, b) => a.index - b.index)
+              .find(
+                (p) =>
+                  /\.(jpe?g|png)$/i.test(p.title) && p.imageinfo?.[0]?.thumburl,
+              );
+            return hit ? hit.imageinfo[0].thumburl : null;
+          } catch (_) {
+            return null;
+          }
+        })();
+        const infoP = (async () => {
+          const r = await fetch("/api/ingredient", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, target_lang: $("lang").value }),
+          });
+          if (!r.ok) throw new Error((await r.json()).detail || r.status);
+          return r.json();
+        })();
+        try {
+          const [img, info] = await Promise.all([imgP, infoP]);
+          $("ingBody").innerHTML = `
+      <div class="ing-img">${img ? `<img src="${img}" alt="${esc(name)}">` : "🌿"}</div>
+      <div class="pad">
+        <h4>${esc(info.name)}</h4>
+        <p>${esc(info.overview)}</p>
+        <p class="tl">Tastes like · ${esc(info.tastes_like)}</p>
+        <p style="color:var(--dim)">Used in · ${esc(info.used_in.join(", "))}</p>
+      </div>`;
+        } catch (err) {
+          $("ingBody").innerHTML =
+            `<div class="pad" style="padding-top:18px"><h4>${esc(name)}</h4>
+      <p style="color:#A5301D">Couldn't load: ${esc(err.message)}</p></div>`;
+        }
+      }
+      function closeIngredient() {
+        document.body.classList.remove("ing-open");
+      }
+
+      /* region food-culture panel */
+      async function loadRegion(region) {
+        const panel = $("regionPanel"),
+          inner = $("regionInner"),
+          btn = $("exploreBtn");
+        btn.disabled = true;
+        btn.textContent = "Loading…";
+        inner.innerHTML = `<div class="skeleton" style="height:80px"></div>`;
+        panel.classList.add("open");
+        try {
+          const r = await fetch("/api/region", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ region, target_lang: $("lang").value }),
+          });
+          if (!r.ok) throw new Error((await r.json()).detail || r.status);
+          const g = await r.json();
+          inner.innerHTML = `
+      <h3>${esc(g.region)}</h3>
+      <p>${esc(g.overview)}</p>
+      <div class="krow">How people eat here</div>
+      <p>${esc(g.food_culture)}</p>
+      <div class="krow">Signature ingredients · tap one</div>
+      <div class="chips">${g.signature_ingredients.map((x) => `<span class="chip tapc" data-ing="${esc(x)}">${esc(x)}</span>`).join("")}</div>
+      <div class="krow">Also worth ordering · tap one</div>
+      <div class="chips">${g.must_try.map((x) => `<span class="chip tapc" data-dish="${esc(x)}">${esc(x)}</span>`).join("")}</div>`;
+          wireIngredientChips(inner);
+          inner.querySelectorAll(".chip.tapc[data-dish]").forEach((ch) => {
+            ch.onclick = (ev) => {
+              ev.stopPropagation();
+              const [og, en] = ch.dataset.dish.split(" - ");
+              openSheet({
+                original: og.trim(),
+                translated_name: (en || og).trim(),
+                what_it_is: "",
+                category: "main",
+                confidence: "known",
+              });
+            };
+          });
+          btn.style.display = "none";
+        } catch (err) {
+          inner.innerHTML = `<p style="color:#A5301D;font-size:14px">Couldn't load region info: ${esc(err.message)}</p>`;
+          btn.disabled = false;
+          btn.textContent = `Explore ${esc(region.split(",")[0])} →`;
+        }
+      }
+
+      /* ============ EXPLORE TAB ============ */
+      $("cityInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") loadCity();
+      });
+
+      function titleCase(x) {
+        return x.replace(/\S+/g, (w) => w[0].toUpperCase() + w.slice(1));
+      }
+      async function loadCity() {
+        const city = titleCase($("cityInput").value.trim());
+        if (!city) return;
+        $("cityInput").value = city;
+        $("guide").innerHTML = "";
+        hideErrorX();
+        $("loadingX").classList.add("on");
+        try {
+          const r = await fetch("/api/city", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ city, target_lang: $("lang").value }),
+          });
+          if (!r.ok) throw new Error((await r.json()).detail || r.status);
+          renderGuide(await r.json());
+        } catch (err) {
+          showErrorX("Couldn't build the guide: " + err.message);
+        }
+        $("loadingX").classList.remove("on");
+      }
+
+      function renderGuide(g) {
+        const cards = [];
+        const bbox = `${g.lng - 0.25}%2C${g.lat - 0.16}%2C${g.lng + 0.25}%2C${g.lat + 0.16}`;
+        cards.push(
+          `<div class="city-hero" id="cityHero"><span class="ch-name">${esc(g.city)}</span></div>`,
+        );
+        cards.push(`<div class="guide-card city-map" style="padding:12px">
+    <iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${g.lat}%2C${g.lng}"></iframe></div>`);
+        cards.push(
+          `<div class="guide-card"><div class="gk">${esc(g.city)} on a plate</div><p>${esc(g.intro)}</p></div>`,
+        );
+        cards.push(
+          `<div class="guide-card"><div class="gk">Eat like a local</div><p>${esc(g.customs)}</p></div>`,
+        );
+        g.dishes.forEach((d) => {
+          const spots =
+            d.famous_spots && d.famous_spots.length
+              ? `<div class="spots"><b>Famous for it</b> · ${d.famous_spots
+                  .map(
+                    (sp) =>
+                      `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(sp + " " + g.city)}" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline">${esc(sp)}</a>`,
+                  )
+                  .join(", ")}</div>`
+              : "";
+          cards.push(`<div class="guide-card tap gdish" data-og="${esc(d.name_original)}" data-en="${esc(d.name_english)}" data-why="${esc(d.why)}" data-city="${esc(g.city)}">
+      <div class="gbody">
+        <div class="en">${esc(d.name_english)}</div>
+        <div class="og">${esc(d.name_original)}</div>
+        <div class="why">${esc(d.why)}</div>
+        <span class="price-pill">${esc(d.price_range)}</span>
+        <div class="meta"><b>Find it</b> · ${esc(d.where_to_find)}<br><b>Local tip</b> · ${esc(d.local_tip)}</div>
+        ${spots}
+      </div>
+      <div class="cthumb" data-tq="${esc(d.name_english)}">🍽</div>
+    </div>`);
+        });
+        $("guide").innerHTML = cards.join("");
+        document
+          .querySelectorAll("#guide .guide-card, #guide .city-hero")
+          .forEach((el, i) => {
+            reveal(el, i);
+            if (el.classList.contains("tap"))
+              el.onclick = () =>
+                openSheet({
+                  original: el.dataset.og,
+                  translated_name: el.dataset.en,
+                  what_it_is: el.dataset.why,
+                  category: "main",
+                  confidence: "known",
+                  city: el.dataset.city,
+                });
+          });
+        document
+          .querySelectorAll("#guide .cthumb")
+          .forEach((t) => thumbIO.observe(t));
+        loadCityHero(g.city);
+        const note0 = null;
+        const note = document.createElement("p");
+        note.style.cssText =
+          "font-size:12.5px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.5";
+        note.textContent =
+          "Prices and famous spots are AI-suggested — always double-check on a maps app before you go.";
+        $("guide").appendChild(note);
+      }
+
+      /* city hero photo from Wikipedia (city articles almost always have one) */
+      async function loadCityHero(city) {
+        try {
+          const r = await fetch(
+            `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(city)}&gsrlimit=3&prop=pageimages&piprop=thumbnail&pithumbsize=800&format=json&origin=*`,
+          );
+          const j = await r.json();
+          const hit = Object.values(j.query?.pages || {})
+            .sort((a, b) => a.index - b.index)
+            .find((p) => p.thumbnail?.source);
+          if (hit && $("cityHero")) {
+            $("cityHero").insertAdjacentHTML(
+              "afterbegin",
+              `<img src="${hit.thumbnail.source}" alt="${esc(city)}" onload="this.classList.add('ld')">`,
+            );
+          }
+        } catch (_) {}
+      }
+
+      /* geolocation -> city name via OpenStreetMap Nominatim (needs https or localhost) */
+      function useLocation() {
+        if (!navigator.geolocation) {
+          showErrorX("Location isn't available in this browser.");
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            try {
+              const { latitude, longitude } = pos.coords;
+              const r = await fetch(
+                `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
+              );
+              const j = await r.json();
+              const city = j.city || j.locality || j.principalSubdivision;
+              if (city) {
+                $("cityInput").value = city;
+                loadCity();
+              } else
+                showErrorX("Couldn't work out your city — type it instead.");
+            } catch (_) {
+              showErrorX(
+                "Couldn't look up your location — type your city instead.",
+              );
+            }
+          },
+          () =>
+            showErrorX(
+              "Location permission denied — type your city instead. (Tip: location needs an https link, e.g. via ngrok.)",
+            ),
+        );
+      }
+
+      /* ============ shared ============ */
+      function closeSheet() {
+        document.body.classList.remove("open");
+      }
+      function reset() {
+        $("cards").innerHTML = "";
+        $("langTag").style.display = "none";
+        $("again").classList.remove("on");
+        show("capture");
+      }
+      function show(id) {
+        $("capture").style.display = id === "capture" ? "flex" : "none";
+        $("loading").classList.toggle("on", id === "loading");
+      }
+      function showError(m) {
+        const e = $("error");
+        e.textContent = m;
+        e.classList.add("on");
+      }
+      function hideError() {
+        $("error").classList.remove("on");
+      }
+      function showErrorX(m) {
+        const e = $("errorX");
+        e.textContent = m;
+        e.classList.add("on");
+      }
+      function hideErrorX() {
+        $("errorX").classList.remove("on");
+      }
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+    </script>
+  </body>
+</html>
