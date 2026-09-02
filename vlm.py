@@ -34,6 +34,7 @@ Extract every dish you can read. Return a JSON object matching this exact schema
       "translated_name": "the name a local English-language menu would actually print. Prefer the internationally recognized romanized name plus a short descriptor, e.g. Pad Krapow (basil pork rice), Mapo Tofu, Lu Rou Fan (braised pork rice). Avoid stiff word-for-word translations.",
       "literal": "word-for-word translation ONLY if it differs amusingly or confusingly from what the dish is, otherwise null",
       "what_it_is": "one short plain-{target_lang} line saying what the dish actually is. Interpret, do not just translate.",
+      "image_query": "the most specific GENERIC dish name a photo search would find, based on what this dish visually IS: e.g. cheeseburger, pad kaprao, margherita pizza, beef noodle soup. NEVER a restaurant's marketing name, brand, or invented name - a house 'Dream Burger' is just cheeseburger.",
       "category": "main / side / soup / cold_dish / dessert / drink / other",
       "confidence": "known if you recognize this as a real dish, unsure if guessing"
     }}
@@ -61,7 +62,7 @@ Explain this dish for a traveler in {target_lang}. Return a JSON object with exa
   "how_to_eat": "practical advice e.g. shared dish eaten over rice",
   "heritage": "2-4 sentences a traveler would love: history, tradition, who eats it and when. Real facts only - if you don't know its history, say it is a common everyday dish and describe how it is enjoyed.",
   "english_name": "common English name, e.g. Mapo Tofu",
-  "canonical_name": "the single most internationally searchable name for this dish, usually the romanized local name, e.g. Pad kaprao, Lu rou fan, Mapo doufu",
+  "canonical_name": "the most internationally searchable GENERIC name for this dish, usually the romanized local name, e.g. Pad kaprao, Lu rou fan. NEVER a brand or a menu marketing name - reduce house specials to the underlying dish type, e.g. cheeseburger.",
   "origin_region": "region most associated with it, e.g. Sichuan, China",
   "origin_lat": 30.6,
   "origin_lng": 104.1,

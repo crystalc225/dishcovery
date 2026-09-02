@@ -7,6 +7,7 @@ class DishTier1(BaseModel):
     translated_name: str        # natural name in target language, e.g. "Braised Eggplant in Garlic Sauce"
     literal: str | None = None  # literal translation only if amusingly/confusingly different
     what_it_is: str             # one-line plain answer
+    image_query: str            # generic dish type for photo search, e.g. "cheeseburger" - never a brand/marketing name
     category: str               # main / side / soup / cold_dish / dessert / drink / other
     confidence: str             # "known" or "unsure"
 
